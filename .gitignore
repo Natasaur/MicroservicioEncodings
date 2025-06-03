@@ -1,0 +1,13 @@
+# Node modules (si usas npm)
+node_modules/
+
+# Archivos temporales y del sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Archivos de configuración personal
+.env
+.vscode/

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Panel UTC{% endblock %}</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+
+  <!-- Barra lateral -->
+  <div class="sidebar">
+    <h2>UTC</h2>
+    <a href="{% url 'registro' %}">Registro</a>
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <!-- Agrega más enlaces si es necesario -->
+  </div>
+
+  <!-- Encabezado -->
+  <div class="header">
+    {% block header %}
+      Universidad Tres Culturas
+    {% endblock %}
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    {% block content %}{% endblock %}
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% extends "reconocimiento/index.html" %}
+
+{% block title %}Asistencia Diaria{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h3>Registrar Asistencia</h3>
+    <p>Sube una foto tomada en el momento para registrar tu asistencia del día.</p>
+    <div class="card" style="background-color: #fffbea; border-left: 6px solid #ffc107;">
+            <h4>📸 Recomendaciones para subir tu foto</h4>
+            <ul>
+                <li>Rostro de frente, completo y bien centrado</li>
+                <li>Buena iluminación, sin sombras ni contraluces</li>
+                <li>Fondo sencillo (pared blanca o similar)</li>
+                <li>Sin lentes oscuros, gorras ni cubrebocas</li>
+                <li>Una sola persona en la imagen</li>
+                <li>Sin filtros ni ediciones</li>
+                <li>Formato JPG o PNG, imagen clara y nítida</li>
+            </ul>
+        </div>
+
+        <div class="card" style="background-color: #fffbea; border-left: 6px solid #ffc107;">
+            <strong>⚠ Importante:</strong> Asegúrate de que solo tú aparezcas en la foto. Si el sistema detecta más de un rostro, no se permitirá el registro o la asistencia.
+        </div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <!--<input type="text" name="matricula" placeholder="Matrícula"><br>-->
+        <label>Foto del día:</label><br>
+        <input type="file" name="imagen" required><br><br>
+        <button type="submit">Enviar asistencia</button>
+    </form>
+
+    {% if mensaje %}
+      <p><strong>{{ mensaje }}</strong></p>
+    {% endif %}
+    </div>
+{% endblock %}
