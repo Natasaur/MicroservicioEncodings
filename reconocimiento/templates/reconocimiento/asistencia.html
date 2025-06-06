@@ -22,16 +22,51 @@
         <div class="card" style="background-color: #fffbea; border-left: 6px solid #ffc107;">
             <strong>⚠ Importante:</strong> Asegúrate de que solo tú aparezcas en la foto. Si el sistema detecta más de un rostro, no se permitirá el registro o la asistencia.
         </div>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <!--<input type="text" name="matricula" placeholder="Matrícula"><br>-->
+    <form id="asistencia-form">
         <label>Foto del día:</label><br>
         <input type="file" name="imagen" required><br><br>
         <button type="submit">Enviar asistencia</button>
     </form>
 
-    {% if mensaje %}
-      <p><strong>{{ mensaje }}</strong></p>
-    {% endif %}
+    <div id="mensaje" style="margin-top: 15px;">
+        {% if mensaje %}<p><strong>{{ mensaje }}</strong></p>{% endif %}
     </div>
+  </div>
+  <script>
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      alert("Por favor inicia sesión primero");
+      window.location.href = "/login/";
+    }
+
+    const form = document.getElementById('asistencia-form');
+    const mensaje = document.getElementById('mensaje');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch('/asistencia/', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          body: formData
+        });
+
+        const data = await response.text();
+
+        if (response.ok) {
+          mensaje.innerHTML = '<p style="color: green;"><strong>' + data + '</strong></p>';
+          form.reset();
+        } else {
+          mensaje.innerHTML = '<p style="color: red;"><strong>' + data + '</strong></p>';
+        }
+      } catch (error) {
+        mensaje.innerHTML = '<p style="color: red;"><strong>Error al conectar con el servidor.</strong></p>';
+      }
+    });
+  </script>
 {% endblock %}

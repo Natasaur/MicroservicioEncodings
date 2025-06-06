@@ -1,0 +1,28 @@
+{% comment %} Barra lateral reutilizable {% endcomment %}
+<div class="sidebar">
+  <h2>UTC</h2>
+
+  {% if vista == 'index' %}
+    <a href="{% url 'registro' %}">Registro</a>
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <a href="#" onclick="logout()" style="color: red;">Cerrar sesión</a>
+
+  {% elif vista == 'registro' %}
+    <a href="{% url 'index' %}">Inicio</a>
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <a href="#" onclick="logout()" style="color: red;">Cerrar sesión</a>
+
+  {% elif vista == 'asistencia' %}
+    <a href="{% url 'index' %}">Inicio</a>
+    <a href="{% url 'registro' %}">Registro</a>
+    <a href="#" onclick="logout()" style="color: red;">Cerrar sesión</a>
+  {% endif %}
+</div>
+
+<script>
+  function logout() {
+    localStorage.removeItem("jwt");
+    alert("Sesión cerrada");
+    window.location.href = "{% url 'login' %}";
+  }
+</script>

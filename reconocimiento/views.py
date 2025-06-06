@@ -2,18 +2,61 @@ import os
 import cv2
 import face_recognition
 import numpy as np
+import bcrypt
+# from django.http import JsonResponse
+from pymongo import MongoClient
+from .utils.jwt import crear_access_token
 from datetime import datetime
 from pymongo import MongoClient
 from django.conf import settings
 from django.shortcuts import render
+from .decorators import jwt_required
+from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
 
-IP_PERMITIDA = "189.217.95.250"
-
-from django.shortcuts import render
+# IP_PERMITIDA = "189.217.95.250"
+DB_CLIENT = "mongodb+srv://uconfortasist:Udl8Q0APE93vt3BB@cluster0.g6qne.mongodb.net/UConfortAsist?retryWrites=true&w=majority"
 
 def index(request):
     return render(request, 'reconocimiento/index.html')
 
+def login(request):
+    if request.method == "POST":
+        correo = request.POST.get("correo")
+        password = request.POST.get("password")
+
+        if not correo or not password:
+            return render(request, 'reconocimiento/login.html', {"mensaje": "Correo y contraseña obligatorios"})
+
+        cliente = MongoClient(DB_CLIENT)
+        db = cliente["UConfortAsist"]
+        usuarios = db["usuarios"]
+
+        usuario = usuarios.find_one({"correo": correo})
+
+        if not usuario:
+            return render(request, 'reconocimiento/login.html', {"mensaje": "Usuario no encontrado"})
+
+        if not bcrypt.checkpw(password.encode(), usuario["password"].encode()):
+            return render(request, 'reconocimiento/login.html', {"mensaje": "Contraseña incorrecta"})
+
+        # Generar token y pasar a siguiente vista (por ahora solo mostrar)
+        token = crear_access_token(usuario)
+
+        return render(request, 'reconocimiento/index.html', {
+            "mensaje": f"Bienvenido {usuario['nombre']}",
+            "token": token  # puedes mostrarlo o usarlo en JS
+        })
+
+    return render(request, 'reconocimiento/login.html')
+
+def logout(request):
+    request.session.flush()  # Limpia la sesión
+    return redirect('login')  # Redirige al login
+
+@csrf_exempt
+@jwt_required
 def registro(request):
     mensaje = None
     if request.method == 'POST':
@@ -49,7 +92,7 @@ def registro(request):
             
         # Guardar alumno en MongoDB
         encoding = codificaciones[0].tolist()
-        cliente = MongoClient("mongodb+srv://uconfortasist:Udl8Q0APE93vt3BB@cluster0.g6qne.mongodb.net/UConfortAsist?retryWrites=true&w=majority")
+        cliente = MongoClient(DB_CLIENT)
         db = cliente["UConfortAsist"]
         alumnos = db["alumnos"]
         grupos = db["grupos"]
@@ -78,9 +121,10 @@ def registro(request):
             }
             alumnos.insert_one(alumno)
             mensaje = "Registro exitoso"
-    return render(request, 'reconocimiento/registro.html', {"mensaje": mensaje})
+    return render(request, 'reconocimiento/registro.html', {"mensaje": mensaje, "vista": "registro"})
 
-
+@csrf_exempt
+@jwt_required
 def asistencia(request):
     mensaje = None
 
@@ -114,7 +158,7 @@ def asistencia(request):
         encoding_nuevo = codificaciones[0]
 
         # Conectar con MongoDB y buscar coincidencia
-        cliente = MongoClient("mongodb+srv://uconfortasist:Udl8Q0APE93vt3BB@cluster0.g6qne.mongodb.net/UConfortAsist?retryWrites=true&w=majority")
+        cliente = MongoClient(DB_CLIENT)
         db = cliente["UConfortAsist"]
         alumnos_raw = list(db["alumnos"].find({"encoding": {"$exists": True}}))
         
@@ -145,5 +189,9 @@ def asistencia(request):
             mensaje = f"Asistencia de {alumno['nombre']} {alumno['apellido_paterno']} registrada correctamente"
         else:
             mensaje = "Rostro no coincide con ningún alumno registrado"
+            
+         # Responder con texto si la petición viene de fetch (JSON o no acepta HTML)
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest" or request.headers.get("Authorization"):
+            return HttpResponse(mensaje, status=200 if "registrada correctamente" in mensaje else 400)
 
-    return render(request, 'reconocimiento/asistencia.html', {"mensaje": mensaje})
+    return render(request, 'reconocimiento/asistencia.html', {"mensaje": mensaje, "vista": "asistencia"})

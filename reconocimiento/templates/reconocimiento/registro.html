@@ -23,8 +23,7 @@
             <strong>⚠ Importante:</strong> Asegúrate de que solo tú aparezcas en la foto. Si el sistema detecta más de un rostro, no se permitirá el registro o la asistencia.
         </div>
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+        <form id="registro-form">
             <input type="text" name="matricula" placeholder="Matrícula" required><br>
             <input type="text" name="nombre" placeholder="Nombre" required><br>
             <input type="text" name="apellido_paterno" placeholder="Apellido paterno" required><br>
@@ -33,12 +32,48 @@
             <input type="text" name="ciclo" placeholder="Ciclo Escolar" required><br>
             <input type="text" name="contacto" placeholder="Contacto" required><br>
             <label>Foto de rostro:</label><br>
-            <input type="file" name="imagen" required><br><br>
+            <input type="file" name="imagen" accept="image/*" required><br><br>
             <button type="submit">Registrarse</button>
         </form>
 
-        {% if mensaje %}
-            <p style="color: red;"><strong>{{ mensaje }}</strong></p>
-        {% endif %}
+        <div id="mensaje" style="margin-top: 15px;"></div>
     </div>
+
+    <script>
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            alert("Por favor inicia sesión primero");
+            window.location.href = "/login/";
+        }
+
+        const form = document.getElementById('registro-form');
+        const mensaje = document.getElementById('mensaje');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/registro/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+
+                const data = await response.text();
+
+                if (response.ok) {
+                    mensaje.innerHTML = '<p style="color: green;"><strong>Registro exitoso</strong></p>';
+                    form.reset();
+                } else {
+                    mensaje.innerHTML = '<p style="color: red;"><strong>' + data + '</strong></p>';
+                }
+            } catch (error) {
+                mensaje.innerHTML = '<p style="color: red;"><strong>Error al conectar con el servidor.</strong></p>';
+            }
+        });
+    </script>
 {% endblock %}
