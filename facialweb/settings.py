@@ -30,10 +30,11 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 SECRET_KEY = 'django-insecure-4_j&izkhkqu+p_(2l2!!#o8y*43v_=4svoqzhc=-2$7ns5&4o%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# CAMBIAR A FALSE CUANDO SE SUBA A PYTHONANYWHERE
+# CAMBIAR A TRUE CUANDO SE ESTE PROBANDO LOCALMENTE
+DEBUG = True
 
-ALLOWED_HOSTS = ['natasaur.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['natasaur.pythonanywhere.com','127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -118,6 +119,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 
 
 # Static files (CSS, JavaScript, Images)

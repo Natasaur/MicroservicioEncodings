@@ -1,17 +1,26 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Panel UTC{% endblock %}</title>
-  {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
   <script>
     const currentPath = window.location.pathname;
   </script>
 </head>
+<script>
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active');
+  }
+</script>
 <body>
 
   <!-- Barra lateral -->
+  <button class="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
   {% include 'reconocimiento/sidebar.html' with vista='index' %}
 
 
