@@ -13,6 +13,7 @@ from .decorators import jwt_required
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
+#from .models import RutaImagen
 
 # IP_PERMITIDA = "189.217.95.250"
 DB_CLIENT = "mongodb+srv://uconfortasist:Udl8Q0APE93vt3BB@cluster0.g6qne.mongodb.net/UConfortAsist?retryWrites=true&w=majority"
@@ -35,10 +36,10 @@ def login(request):
         usuario = usuarios.find_one({"correo": correo})
 
         if not usuario:
-            return render(request, 'reconocimiento/login.html', {"mensaje": "Usuario no encontrado"})
+            return render(request, 'reconocimiento/login.html', {"mensaje": "Usuario no encontrado", "vista": "login"})
 
         if not bcrypt.checkpw(password.encode(), usuario["password"].encode()):
-            return render(request, 'reconocimiento/login.html', {"mensaje": "Contraseña incorrecta"})
+            return render(request, 'reconocimiento/login.html', {"mensaje": "Contraseña incorrecta", "vista": "login"})
 
         # Generar token y pasar a siguiente vista (por ahora solo mostrar)
         token = crear_access_token(usuario)
@@ -48,7 +49,7 @@ def login(request):
             "token": token  # puedes mostrarlo o usarlo en JS
         })
 
-    return render(request, 'reconocimiento/login.html')
+    return render(request, 'reconocimiento/login.html', {"vista": "login"})
 
 def logout(request):
     request.session.flush()  # Limpia la sesión
@@ -77,15 +78,40 @@ def registro(request):
             for chunk in imagen.chunks():
                 f.write(chunk)
 
+        #ruta_relativa = os.path.relpath(ruta_img, settings.BASE_DIR)
+
+        #RutaImagen.objects.update_or_create(
+        #    matricula=matricula,
+        #    defaults={'ruta_imagen': ruta_relativa}
+        #    )
+
+
+        # RECONOCIMIENTO FACIAL
         img = cv2.imread(ruta_img)
         rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        codificaciones = face_recognition.face_encodings(rgb)
 
-        if len(codificaciones) == 0:
+        # Detectar ubicación del rostro
+        ubicaciones = face_recognition.face_locations(rgb)
+
+        if len(ubicaciones) == 0:
             return _respuesta(request, "No se detectó ningún rostro en la imagen.", 400)
 
-        if len(codificaciones) > 1:
+        if len(ubicaciones) > 1:
             return _respuesta(request, "Se detectaron múltiples rostros. Sube una foto en la que solo tú aparezcas.", 400)
+
+        # Recortar el rostro
+        top, right, bottom, left = ubicaciones[0]
+        cara_recortada = img[top:bottom, left:right]
+
+        # Sobrescribir la imagen original con solo la cara
+        cv2.imwrite(ruta_img, cara_recortada)
+
+        # Codificar el rostro recortado
+        rgb_cara = cv2.cvtColor(cara_recortada, cv2.COLOR_BGR2RGB)
+        codificaciones = face_recognition.face_encodings(rgb_cara)
+
+        if len(codificaciones) == 0:
+            return _respuesta(request, "No se pudo codificar el rostro recortado.", 400)
 
         encoding = codificaciones[0].tolist()
 
@@ -118,8 +144,8 @@ def registro(request):
 
     return render(request, 'reconocimiento/registro.html', {"vista": "registro"})
 
-@csrf_exempt
-@jwt_required
+#@csrf_exempt
+#@jwt_required
 def asistencia(request):
     if request.method == 'POST':
         imagen = request.FILES['imagen']

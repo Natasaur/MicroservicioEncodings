@@ -33,12 +33,6 @@
     </div>
   </div>
   <script>
-    const token = localStorage.getItem('jwt');
-    if (!token) {
-      alert("Por favor inicia sesión primero");
-      window.location.href = "/login/";
-    }
-
     const form = document.getElementById('asistencia-form');
     const mensaje = document.getElementById('mensaje');
 
