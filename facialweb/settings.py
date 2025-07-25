@@ -35,6 +35,10 @@ SECRET_KEY = 'django-insecure-4_j&izkhkqu+p_(2l2!!#o8y*43v_=4svoqzhc=-2$7ns5&4o%
 DEBUG = True
 
 ALLOWED_HOSTS = ['natasaur.pythonanywhere.com','127.0.0.1', 'localhost']
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
 
 # Application definition
 
@@ -46,10 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'facialweb',
-    'reconocimiento'
+    'reconocimiento',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,7 +92,7 @@ WSGI_APPLICATION = 'facialweb.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        #'ENGINE': 'django.db.backends.mysql',
         'NAME': 'natasaur$pase_de_lista_ia',
         'USER': 'natasaur',
         'PASSWORD': 'Dr4g0ns_2231',
