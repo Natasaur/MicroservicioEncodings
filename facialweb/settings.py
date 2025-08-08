@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,7 +35,8 @@ SECRET_KEY = 'django-insecure-4_j&izkhkqu+p_(2l2!!#o8y*43v_=4svoqzhc=-2$7ns5&4o%
 # CAMBIAR A TRUE CUANDO SE ESTE PROBANDO LOCALMENTE
 DEBUG = True
 
-ALLOWED_HOSTS = ['natasaur.pythonanywhere.com','127.0.0.1', 'localhost']
+# ALLOWED_HOSTS = ['natasaur.pythonanywhere.com','127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", os.environ.get("RENDER_EXTERNAL_HOSTNAME")]
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -91,17 +93,10 @@ WSGI_APPLICATION = 'facialweb.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        #'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'natasaur$pase_de_lista_ia',
-        'USER': 'natasaur',
-        'PASSWORD': 'Dr4g0ns_2231',
-        'HOST': 'natasaur.mysql.pythonanywhere-services.com',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),  # Render la pone automáticamente
+        conn_max_age=600
+    )
 }
 
 # Password validation
