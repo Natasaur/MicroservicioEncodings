@@ -26,27 +26,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # SECURITY WARNING: don't run with debug turned on in production!
 # CAMBIAR A FALSE CUANDO SE SUBA A PYTHONANYWHERE
 # CAMBIAR A TRUE CUANDO SE ESTE PROBANDO LOCALMENTE
-DEBUG = False
+DEBUG = True
 
 # This production code might break development mode, so we check whether we're in DEBUG mode
-<<<<<<< HEAD
-#if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    #STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
-    #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-=======
-if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
-    # and renames the files with unique names for each version to support long-term caching
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
->>>>>>> d72ea6b99be297213d07d7b5822b539e4875783c
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -55,7 +37,7 @@ if not DEBUG:
 SECRET_KEY = 'django-insecure-4_j&izkhkqu+p_(2l2!!#o8y*43v_=4svoqzhc=-2$7ns5&4o%'
 
 # ALLOWED_HOSTS = ['natasaur.pythonanywhere.com','127.0.0.1', 'localhost']
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", os.environ.get("RENDER_EXTERNAL_HOSTNAME")]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
@@ -120,12 +102,12 @@ WSGI_APPLICATION = 'facialweb.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-"""DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get("postgresql://postgres:postgres@localhost:5432/mysite"),  # Render la pone automáticamente
-        conn_max_age=600
-    )
-}"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

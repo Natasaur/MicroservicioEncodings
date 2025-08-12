@@ -29,17 +29,17 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-# 3. Instalar dependencias
+### 3. Instalar dependencias
 ```bash
 pip install -r requirements.txt
 ```
 
-# 4. Ejecutar migraciones
+### 4. Ejecutar migraciones
 ```bash
 python manage.py migrate
 ```
 
-# 5. Iniciar servidor
+### 5. Iniciar servidor
 ```bash
 python manage.py runserver
 ```
