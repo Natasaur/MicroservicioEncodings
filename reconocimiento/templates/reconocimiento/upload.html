@@ -1,0 +1,20 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Matrícula:</label><br>
+    <input type="text" name="matricula" required><br>
+
+    <label>Grupo:</label><br>
+    <input type="text" name="grupo" required><br>
+
+    <label>Ciclo Escolar:</label><br>
+    <input type="text" name="ciclo" required><br>
+
+    <label>Sube tu imagen:</label><br>
+    <input type="file" name="imagen" required><br><br>
+
+    <button type="submit">Procesar</button>
+
+    {% if resultado %}
+        <p><strong>Resultado:</strong> {{ resultado }}</p>
+    {% endif %}
+</form>

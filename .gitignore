@@ -1,0 +1,48 @@
+# Node modules (si usas npm)
+node_modules/
+build/
+dist/
+
+# Archivos temporales y del sistema
+.DS_Store
+Thumbs.db
+build.sh
+
+# Logs
+*.log
+
+# Archivos de configuración personal
+.env
+.vscode/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Archivos temporales
+*.log
+*.pot
+*.pyc
+*.sqlite3
+
+# Archivos de entorno
+.env
+*.env
+
+# Archivos de VSCode/PyCharm
+.vscode/
+.idea/
+
+# Entorno virtual
+venv/
+env/
+
+# Archivos de compilación
+*.egg-info/
+dist/
+build/
+
+# Archivos de Django
+media/
+staticfiles/

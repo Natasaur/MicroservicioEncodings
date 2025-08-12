@@ -1,0 +1,220 @@
+/* CADA QUE SE HAGA UN CAMBIO, CORRER EN LA TERMINAL
+python manage.py collectstatic --noinput
+PARA ACTUALIZAR LOS ARCHIVOS ESTÁTICOS EN PRODUCCIÓN*/
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #000;
+}
+
+/* Barra lateral */
+.sidebar {
+    width: 180px;
+    height: 100vh;
+    background-color: #001f4d;
+    color: white;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.sidebar a {
+    color: white;
+    display: block;
+    margin: 20px 0;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Encabezado */
+.header {
+    background-color: #ff6600;
+    padding: 20px;
+    margin-left: 150px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+/* Contenedor principal */
+.main-content {
+    margin-left: 180px;
+    padding: 30px;
+}
+
+/* Tarjetas */
+.card {
+    text-align: left;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.05);
+}
+
+/* Botones */
+.btn {
+    padding: 10px 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    margin-right: 10px;
+}
+
+.btn-green {
+    background-color: #28a745;
+}
+
+.btn-blue {
+    background-color: #007bff;
+}
+
+.btn-red {
+    background-color: #dc3545;
+}
+
+.btn-green:hover {
+    background-color: #218838;
+}
+
+.btn-blue:hover {
+    background-color: #0069d9;
+}
+
+.btn-red:hover {
+    background-color: #c82333;
+}
+
+/* Inputs */
+input[type="file"],
+input[type="text"],
+input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    margin: 10px 0;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Tabla de asistencias */
+.table-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+/* Paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button {
+    padding: 6px 12px;
+    border: none;
+    margin: 0 2px;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+}
+
+/* === Estilos Responsivos === */
+@media (max-width: 768px) {
+    /* Ajustar la barra lateral */
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .sidebar a {
+        margin: 10px 0;
+        font-size: 16px;
+    }
+
+    /* Encabezado */
+    .header {
+        margin-left: 0;
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    /* Contenido principal */
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    /* Tarjetas */
+    .card {
+        padding: 15px;
+    }
+
+    /* Inputs */
+    input[type="file"],
+    input[type="text"],
+    input[type="date"] {
+        max-width: 100%;
+    }
+
+    /* Paginación */
+    .pagination {
+        flex-wrap: wrap;
+    }
+
+    .pagination button {
+        margin: 4px;
+    }
+}
+
+/* Botón de menú solo visible en móviles */
+.menu-toggle {
+    display: none;
+    background-color: #001f4d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        display: none;
+        width: 100%;
+        position: relative;
+        height: auto;
+        padding: 10px;
+        background-color: #001f4d;
+    }
+
+    .sidebar.active {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .header {
+        margin-left: 0;
+    }
+}

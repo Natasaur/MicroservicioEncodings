@@ -1,0 +1,79 @@
+{% extends "reconocimiento/index.html" %}
+
+{% block title %}Registro de Alumno{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h3>Registro</h3>
+
+        <div class="card" style="background-color: #fffbea; border-left: 6px solid #ffc107;">
+            <h4>📸 Recomendaciones para subir tu foto</h4>
+            <ul>
+                <li>Rostro de frente, completo y bien centrado</li>
+                <li>Buena iluminación, sin sombras ni contraluces</li>
+                <li>Fondo sencillo (pared blanca o similar)</li>
+                <li>Sin lentes oscuros, gorras ni cubrebocas</li>
+                <li>Una sola persona en la imagen</li>
+                <li>Sin filtros ni ediciones</li>
+                <li>Formato JPG o PNG, imagen clara y nítida</li>
+            </ul>
+        </div>
+
+        <div class="card" style="background-color: #fffbea; border-left: 6px solid #ffc107;">
+            <strong>⚠ Importante:</strong> Asegúrate de que solo tú aparezcas en la foto. Si el sistema detecta más de un rostro, no se permitirá el registro o la asistencia.
+        </div>
+
+        <form id="registro-form">
+            <input type="text" name="matricula" placeholder="Matrícula:" required><br>
+            <input type="text" name="nombre" placeholder="Nombre:" required><br>
+            <input type="text" name="apellido_paterno" placeholder="Apellido paterno:" required><br>
+            <input type="text" name="apellido_materno" placeholder="Apellido materno:" required><br>
+            <input type="text" name="grupo" placeholder="Grupo:" required><br>
+            <input type="text" name="ciclo" placeholder="Ciclo Escolar:" required><br>
+            <input type="text" name="contacto" placeholder="Contacto: 55 1234 5678" required><br>
+            <label>Foto de rostro:</label><br>
+            <input type="file" name="imagen" accept="image/*" required><br><br>
+            <button type="submit">Registrarse</button>
+        </form>
+
+        <div id="mensaje" style="margin-top: 15px;"></div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            alert("Por favor inicia sesión primero");
+            window.location.href = "/login/";
+        }
+
+        const form = document.getElementById('registro-form');
+        const mensaje = document.getElementById('mensaje');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/registro/', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: formData
+                });
+
+                const data = await response.text();
+
+                if (response.ok) {
+                    mensaje.innerHTML = '<p style="color: green;"><strong>Registro exitoso</strong></p>';
+                    form.reset();
+                } else {
+                    mensaje.innerHTML = '<p style="color: red;"><strong>' + data + '</strong></p>';
+                }
+            } catch (error) {
+                mensaje.innerHTML = '<p style="color: red;"><strong>Error al conectar con el servidor.</strong></p>';
+            }
+        });
+    </script>
+{% endblock %}

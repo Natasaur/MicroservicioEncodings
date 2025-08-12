@@ -1,0 +1,48 @@
+{% comment %} Barra lateral reutilizable {% endcomment %}
+<div class="sidebar">
+  <h2>UTC</h2>
+
+  {% if vista == 'login' %}
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+
+  {% elif vista == 'asistencia' %}
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <a href="{% url 'registro' %}" id="registro-link" style="display: none;">Registro</a>
+    <a href="{% url 'index' %}" id="inicio-link" style="display: none;">Inicio</a>
+    <a href="#" onclick="logout()" id="logout-link" style="color: red; display: none;">Cerrar sesión</a>
+
+  {% elif vista == 'registro' %}
+    <a href="{% url 'index' %}">Inicio</a>
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <a href="#" onclick="logout()" style="color: red;">Cerrar sesión</a>
+
+  {% elif vista == 'index' %}
+    <a href="{% url 'registro' %}">Registro</a>
+    <a href="{% url 'asistencia' %}">Asistencia</a>
+    <a href="#" onclick="logout()" style="color: red;">Cerrar sesión</a>
+  {% endif %}
+</div>
+
+<script>
+  function logout() {
+    localStorage.removeItem("jwt");
+    alert("Sesión cerrada");
+    window.location.href = "{% url 'login' %}";
+  }
+
+  // Mostrar opciones protegidas si hay JWT
+  document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem("jwt");
+
+  if (token) {
+    const registro = document.getElementById("registro-link");
+    const inicio = document.getElementById("inicio-link");
+    const logout = document.getElementById("logout-link");
+
+    if (registro) registro.style.display = "block";
+    if (inicio) inicio.style.display = "block";
+    if (logout) logout.style.display = "block";
+  }
+});
+
+</script>

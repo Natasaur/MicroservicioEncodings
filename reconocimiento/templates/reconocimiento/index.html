@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Panel UTC{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  <script>
+    const currentPath = window.location.pathname;
+  </script>
+</head>
+<script>
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active');
+  }
+</script>
+<body>
+
+  <!-- Barra lateral -->
+  <button class="menu-toggle" onclick="toggleSidebar()">☰ Menú</button>
+  {% include 'reconocimiento/sidebar.html' with vista='index' %}
+
+
+  <!-- Encabezado -->
+  <div class="header">
+    {% block header %}
+      Universidad Tres Culturas
+    {% endblock %}
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    {% block content %}
+      <div>
+        <h1>Bienvenidos a UTC</h1><br>
+        <p>⬅️⬅️⬅️⬅️⬅️⬅️</p>
+      </div>
+    {% endblock %}
+  </div>
+
+  {% if token %}
+  <script>
+    localStorage.setItem("jwt", "{{ token }}");
+    window.location.href = "{% url 'index' %}";
+  </script>
+  {% endif %}
+
+  <script>
+    const token = localStorage.getItem("jwt");
+    const authOnly = document.querySelectorAll(".auth-only");
+    const guestOnly = document.querySelectorAll(".guest-only");
+    const menuAuth = document.getElementById("menu-auth");
+    const menuSimple = document.getElementById("menu-simple");
+    //const currentPath = window.location.pathname;
+
+    // Mostrar/ocultar según token
+    if (token) {
+      authOnly.forEach(el => el.style.display = "block");
+      guestOnly.forEach(el => el.style.display = "none");
+    } else {
+      authOnly.forEach(el => el.style.display = "none");
+      guestOnly.forEach(el => el.style.display = "block");
+    }
+
+    // Si estamos en /registro o /asistencia mostrar solo menú simple
+    if (currentPath === "/registro/" || currentPath === "/asistencia/") {
+      if (token) {
+        menuAuth.style.display = "none";
+        menuSimple.style.display = "block";
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("jwt");
+      alert("Sesión cerrada");
+      window.location.href = "{% url 'login' %}";
+    }
+  </script>
+
+</body>
+</html>
