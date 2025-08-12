@@ -20,18 +20,26 @@ Antes de comenzar, asegúrate de tener instalado:
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/TU_USUARIO/TU_REPOSITORIO.git
-cd TU_REPOSITORIO
+git clone https://github.com/Natasaur/MicroservicioEncodings
+```
 
 ### 2. Crear entorno virtual
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
 
 # 3. Instalar dependencias
+```bash
 pip install -r requirements.txt
+```
 
 # 4. Ejecutar migraciones
+```bash
 python manage.py migrate
+```
 
 # 5. Iniciar servidor
+```bash
 python manage.py runserver
+```
